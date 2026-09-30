@@ -1,0 +1,4 @@
+.env
+bot_accounts.json
+__pycache__/
+*.pyc

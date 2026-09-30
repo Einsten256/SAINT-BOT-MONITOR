@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAINT BOT ROOM</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">♛<b>S</b></div><div><strong>SAINT <em>BOT</em></strong><small>ROOM</small></div></div>
+  <div class="caption">MT5 BOT CONTROL CENTER</div>
+  <nav>
+    <button class="nav active" data-screen="dashboard">⌂ <span>Dashboard</span></button>
+    <button class="nav" data-screen="accounts">▤ <span>Accounts</span></button>
+    <button class="nav" data-action="open-add">⊕ <span>Add Account</span></button>
+    <button class="nav" data-screen="controls">◉ <span>Trading Control</span></button>
+    <button class="nav" data-screen="manual">▧ <span>Manual Records</span></button>
+    <button class="nav" data-screen="performance">▥ <span>Performance</span></button>
+    <button class="nav" data-screen="activity">◫ <span>History / Logs</span></button>
+    <button class="nav" data-screen="settings">⚙ <span>Settings</span></button>
+    <button class="nav" data-screen="about">ⓘ <span>About</span></button>
+  </nav>
+  <div class="admin-card"><div class="avatar">♟</div><div><strong>Kendrick Saint ♛</strong><small>ADMIN</small><small>SAINT BOT ROOM</small><small>v1.0.0</small></div></div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="mobile-title">SAINT BOT ROOM</div>
+  <div class="title"><b>SAINT BOT ROOM</b><small>LIVE MT5 CONTROL CENTER</small></div>
+  <div class="top-right"><div class="clock"><b id="date">--</b><small id="time">--</small></div><div id="server" class="server"><i></i> SERVER</div><button class="icon-btn" data-screen="settings">⚙</button></div>
+</header>
+
+<section class="screen active" id="screen-dashboard">
+  <div class="stats">
+    <div class="stat blue"><span>▣</span><small>TOTAL BALANCE</small><b id="sBalance">$0.00</b></div>
+    <div class="stat pink"><span>▥</span><small>TOTAL EQUITY</small><b id="sEquity">$0.00</b></div>
+    <div class="stat green"><span>↗</span><small>TOTAL PROFIT</small><b id="sProfit">$0.00</b></div>
+    <div class="stat red"><span>↘</span><small>TOTAL LOSS</small><b id="sLoss">$0.00</b></div>
+    <div class="stat purple"><span>▣</span><small>TOTAL WITHDRAW</small><b id="sWithdraw">$0.00</b></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div><h2>▤ MT5 ACCOUNTS</h2><small>Real-time account control</small></div><div class="tools"><input id="search" placeholder="⌕ Search account or user"><button class="pink-btn" data-action="open-add">＋ ADD ACCOUNT</button><button class="ghost" data-action="refresh">↻</button></div></div>
+    <div id="accountsList"></div>
+    <div id="empty" class="empty" hidden><b>NO ACTIVE ACCOUNTS</b><small>Add an MT5 account to begin.</small><button class="green-btn" data-action="open-add">＋ ADD ACCOUNT</button></div>
+  </div>
+</section>
+
+<section class="screen" id="screen-accounts">
+  <div class="screen-head"><div><h1>Accounts</h1><p>Register, activate, deactivate and monitor MT5 bot accounts.</p></div><button class="pink-btn" data-action="open-add">＋ ADD ACCOUNT</button></div>
+  <div class="panel table-panel"><div class="table-head"><span>ACCOUNT</span><span>USER / LABEL</span><span>STATUS</span><span>MT5</span><span>ACTIONS</span></div><div id="accountTable"></div></div>
+</section>
+
+<section class="screen" id="screen-controls">
+  <div class="screen-head"><div><h1>Trading Control</h1><p>Select an account and send commands directly to its MT5 controller.</p></div><button class="ghost" data-action="refresh">↻ REFRESH</button></div>
+  <div id="controlGrid" class="control-grid"></div>
+</section>
+
+<section class="screen" id="screen-manual">
+  <div class="screen-head"><div><h1>Manual Records</h1><p>Enter business figures yourself. These do not alter MT5 balances.</p></div><button class="green-btn" data-action="save-manual">SAVE RECORDS</button></div>
+  <div class="panel manual-panel">
+    <div class="manual-grid">
+      <label>ACCOUNT / USER<input id="mUser" placeholder="Customer name"></label>
+      <label>PROFIT MADE ($)<input id="mProfit" type="number" step="0.01" placeholder="0.00"></label>
+      <label>WITHDRAW ($)<input id="mWithdraw" type="number" step="0.01" placeholder="0.00"></label>
+      <label>LOSS MADE ($)<input id="mLoss" type="number" step="0.01" placeholder="0.00"></label>
+      <label class="wide">NOTES<input id="mNote" placeholder="Notes"></label>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="screen-performance">
+  <div class="screen-head"><div><h1>Performance</h1><p>Live MT5 totals plus your manual records.</p></div></div>
+  <div class="performance-grid">
+    <div class="panel big-number"><small>LIVE EQUITY</small><b id="pEquity">$0.00</b><span id="pAccounts">0 accounts</span></div>
+    <div class="panel big-number"><small>OPEN POSITIONS</small><b id="pPositions">0</b><span>Across connected accounts</span></div>
+    <div class="panel big-number"><small>FLOATING P/L</small><b id="pFloating">$0.00</b><span>Live from MT5</span></div>
+    <div class="panel big-number"><small>MANUAL NET</small><b id="pNet">$0.00</b><span>Profit − loss − withdraw</span></div>
+  </div>
+</section>
+
+<section class="screen" id="screen-activity">
+  <div class="screen-head"><div><h1>History / Logs</h1><p>Every control command and record update is logged locally.</p></div><button class="ghost" data-action="clear-log">CLEAR LOG</button></div>
+  <div class="panel table-panel"><div class="table-head"><span>TIME</span><span>ACCOUNT</span><span>ACTION</span><span>STATUS</span><span>MESSAGE</span></div><div id="fullLog"></div></div>
+</section>
+
+<section class="screen" id="screen-settings">
+  <div class="screen-head"><div><h1>Settings</h1><p>Local control-room preferences.</p></div></div>
+  <div class="settings-grid">
+    <div class="panel setting"><b>Backend</b><span>127.0.0.1:5000</span><small>Flask control server</small></div>
+    <div class="panel setting"><b>MT5 WebRequest</b><span>http://127.0.0.1:5000</span><small>Required in MT5 Expert Advisors settings</small></div>
+    <div class="panel setting"><b>Polling</b><span>3 seconds</span><small>Dashboard refresh interval</small></div>
+    <div class="panel setting"><b>Storage</b><span>Browser LocalStorage</span><small>Manual names, records and logs</small></div>
+  </div>
+</section>
+
+<section class="screen" id="screen-about">
+  <div class="screen-head"><div><h1>About SAINT BOT ROOM</h1><p>Standalone MT5 scanner and terminal-control application.</p></div></div>
+  <div class="panel about"><h2>SAINT BOT ROOM</h2><p>This room monitors registered MT5 accounts and sends START BOT, STOP BOT, REFRESH and CLOSE ALL commands to the SAINT MT5 Controller EA.</p><div class="warning">CLOSE ALL POSITIONS is a real trading action. Use it only when you intentionally want every open position on the selected account closed.</div><p>Firebase, Firestore and SAINT ADMIN are not required for this control room.</p></div>
+</section>
+
+<footer>SAINT BOT ROOM • MT5 SCANNER + TERMINAL CONTROL • NO FIREBASE</footer>
+</main>
+</div>
+
+<div id="modal" class="modal"><div class="modal-card"><button class="modal-x" data-action="close-modal">×</button><h2 id="modalTitle">Add MT5 Account</h2><p id="modalText">Register an account in the local Bot Room.</p><div id="modalBody"></div></div></div>
+<div id="toast" class="toast"></div>
+<script src="/app.js"></script>
+</body>
+</html>
