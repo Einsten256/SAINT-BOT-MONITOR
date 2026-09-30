@@ -452,6 +452,44 @@ def deactivate_account(account_id):
         })
 
 
+@app.delete("/api/admin/accounts/<account_id>")
+def delete_account(account_id):
+    denied = require_admin_key()
+    if denied:
+        return denied
+
+    account_id = str(account_id).strip()
+
+    with lock:
+        if account_id not in authorized_accounts:
+            return jsonify({
+                "ok": False,
+                "error": "ACCOUNT_NOT_REGISTERED"
+            }), 404
+
+        del authorized_accounts[account_id]
+        accounts.pop(account_id, None)
+
+        command_ids = [
+            cid
+            for cid, command in commands.items()
+            if command.get("accountId") == account_id
+        ]
+
+        for command_id in command_ids:
+            commands.pop(command_id, None)
+
+        save_registry()
+
+        print("[DELETE ACCOUNT]", account_id)
+
+        return jsonify({
+            "ok": True,
+            "deletedAccount": account_id,
+            "message": "Account permanently removed from SAINT BOT ROOM."
+        })
+
+
 # ============================================================
 # MT5 HEARTBEAT
 # ============================================================
@@ -1107,41 +1145,3 @@ if __name__ == "__main__":
         debug=False,
         threaded=True
     )
-
-@app.delete("/api/admin/accounts/<account_id>")
-def delete_account(account_id):
-    denied = require_admin_key()
-
-    if denied:
-        return denied
-
-    account_id = str(account_id).strip()
-
-    with lock:
-        if account_id not in authorized_accounts:
-            return jsonify({
-                "ok": False,
-                "error": "ACCOUNT_NOT_REGISTERED"
-            }), 404
-
-        del authorized_accounts[account_id]
-        accounts.pop(account_id, None)
-
-        command_ids = [
-            command_id
-            for command_id, command in commands.items()
-            if command.get("accountId") == account_id
-        ]
-
-        for command_id in command_ids:
-            commands.pop(command_id, None)
-
-        save_registry()
-
-        print("[DELETE ACCOUNT]", account_id)
-
-        return jsonify({
-            "ok": True,
-            "deletedAccount": account_id,
-            "message": "Account permanently removed from SAINT BOT ROOM."
-        })
