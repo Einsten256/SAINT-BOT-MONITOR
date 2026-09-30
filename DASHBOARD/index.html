@@ -197,5 +197,64 @@ if ("serviceWorker" in navigator) {
     window.addEventListener("appinstalled", setInstalled);
 })();
 </script>
+
+<script>
+/* SAINT BOT ROOM - mobile PWA install */
+(function () {
+    let deferredInstallPrompt = null;
+    const btn = document.getElementById("pwaInstallBtn");
+    const status = document.getElementById("pwaInstallStatus");
+
+    if (!btn) return;
+
+    function isStandalone() {
+        return window.matchMedia("(display-mode: standalone)").matches ||
+               window.navigator.standalone === true;
+    }
+
+    if (isStandalone()) {
+        btn.textContent = "✓ SAINT BOT ROOM INSTALLED";
+        btn.disabled = true;
+        if (status) status.textContent = "SAINT BOT ROOM is already installed on this phone.";
+    }
+
+    window.addEventListener("beforeinstallprompt", function (event) {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        btn.style.display = "block";
+        btn.disabled = false;
+        btn.textContent = "📲 INSTALL SAINT BOT ROOM";
+        if (status) status.textContent = "Tap the button to install SAINT BOT ROOM on your phone.";
+    });
+
+    window.addEventListener("appinstalled", function () {
+        deferredInstallPrompt = null;
+        btn.textContent = "✓ SAINT BOT ROOM INSTALLED";
+        btn.disabled = true;
+        if (status) status.textContent = "SAINT BOT ROOM has been installed on this phone.";
+    });
+
+    btn.addEventListener("click", async function () {
+        if (isStandalone()) return;
+
+        if (deferredInstallPrompt) {
+            deferredInstallPrompt.prompt();
+            try {
+                await deferredInstallPrompt.userChoice;
+            } catch (e) {}
+            deferredInstallPrompt = null;
+            return;
+        }
+
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        if (isIOS) {
+            alert("To install SAINT BOT ROOM on iPhone: tap Share, then Add to Home Screen.");
+        } else {
+            alert("Chrome has not exposed the install prompt yet. Open Chrome's ⋮ menu and choose 'Install app' or 'Add to Home screen'. Then add SAINT BOT ROOM to your home screen.");
+        }
+    });
+})();
+</script>
+
 </body>
 </html>
