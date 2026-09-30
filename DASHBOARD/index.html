@@ -101,7 +101,15 @@
     <div class="panel setting"><b>MT5 WebRequest</b><span>https://saint-bot-monitor.onrender.com</span><small>Required in MT5 Expert Advisors settings</small></div>
     <div class="panel setting"><b>Polling</b><span>3 seconds</span><small>Dashboard refresh interval</small></div>
     <div class="panel setting"><b>Storage</b><span>Browser LocalStorage</span><small>Manual names, records and logs</small></div>
-    <div class="panel setting"><b>Mobile App</b><span>Installable PWA</span><small>Use your browser menu to install SAINT BOT ROOM</small></div>
+    <div class="panel setting">
+<b>Mobile App</b>
+<span>SAINT BOT ROOM PWA</span>
+<small id="pwaInstallStatus">Checking installation availability...</small>
+<button id="pwaInstallBtn" class="pink-btn" type="button" style="margin-top:12px;display:none;">
+INSTALL SAINT BOT ROOM
+</button>
+</div>
+<span>Installable PWA</span><small>Use your browser menu to install SAINT BOT ROOM</small></div>
   </div>
 </section>
 
@@ -131,6 +139,63 @@ if ("serviceWorker" in navigator) {
             });
     });
 }
+</script>
+<script>
+/* SAINT BOT ROOM PWA INSTALL LOGIC */
+(function () {
+    let deferredPrompt = null;
+    const btn = document.getElementById("pwaInstallBtn");
+    const status = document.getElementById("pwaInstallStatus");
+
+    function installed() {
+        return window.matchMedia("(display-mode: standalone)").matches ||
+               window.navigator.standalone === true;
+    }
+
+    function setInstalled() {
+        if (btn) {
+            btn.style.display = "block";
+            btn.textContent = "SAINT BOT ROOM INSTALLED";
+            btn.disabled = true;
+        }
+        if (status) status.textContent = "Installed on this device.";
+    }
+
+    if (installed()) {
+        setInstalled();
+        return;
+    }
+
+    window.addEventListener("beforeinstallprompt", function (event) {
+        event.preventDefault();
+        deferredPrompt = event;
+
+        if (btn) btn.style.display = "block";
+        if (status) status.textContent = "Ready to install on this device.";
+    });
+
+    if (btn) {
+        btn.addEventListener("click", async function () {
+            if (!deferredPrompt) {
+                if (status) {
+                    status.textContent =
+                        "Chrome has not made installation available yet. Refresh and try again.";
+                }
+                return;
+            }
+
+            deferredPrompt.prompt();
+
+            try {
+                await deferredPrompt.userChoice;
+            } catch (e) {}
+
+            deferredPrompt = null;
+        });
+    }
+
+    window.addEventListener("appinstalled", setInstalled);
+})();
 </script>
 </body>
 </html>
