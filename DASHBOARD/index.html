@@ -4,7 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SAINT BOT ROOM</title>
+
 <link rel="stylesheet" href="/style.css">
+
+<!-- SAINT BOT ROOM PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#070b14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 </head>
 <body>
 <div class="app">
@@ -88,10 +97,11 @@
 <section class="screen" id="screen-settings">
   <div class="screen-head"><div><h1>Settings</h1><p>Local control-room preferences.</p></div></div>
   <div class="settings-grid">
-    <div class="panel setting"><b>Backend</b><span>127.0.0.1:5000</span><small>Flask control server</small></div>
-    <div class="panel setting"><b>MT5 WebRequest</b><span>http://127.0.0.1:5000</span><small>Required in MT5 Expert Advisors settings</small></div>
+    <div class="panel setting"><b>Backend</b><span>SAINT BOT MONITOR</span><small>Production Flask control server</small></div>
+    <div class="panel setting"><b>MT5 WebRequest</b><span>https://saint-bot-monitor.onrender.com</span><small>Required in MT5 Expert Advisors settings</small></div>
     <div class="panel setting"><b>Polling</b><span>3 seconds</span><small>Dashboard refresh interval</small></div>
     <div class="panel setting"><b>Storage</b><span>Browser LocalStorage</span><small>Manual names, records and logs</small></div>
+    <div class="panel setting"><b>Mobile App</b><span>Installable PWA</span><small>Use your browser menu to install SAINT BOT ROOM</small></div>
   </div>
 </section>
 
@@ -104,8 +114,23 @@
 </main>
 </div>
 
-<div id="modal" class="modal"><div class="modal-card"><button class="modal-x" data-action="close-modal">×</button><h2 id="modalTitle">Add MT5 Account</h2><p id="modalText">Register an account in the local Bot Room.</p><div id="modalBody"></div></div></div>
+<div id="modal" class="modal"><div class="modal-card"><button class="modal-x" data-action="close-modal">×</button><h2 id="modalTitle">Add MT5 Account</h2><p id="modalText">Register an account in the production Bot Room.</p><div id="modalBody"></div></div></div>
 <div id="toast" class="toast"></div>
+
 <script src="/app.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js", { scope: "/" })
+            .then(function () {
+                console.log("SAINT BOT ROOM PWA READY");
+            })
+            .catch(function (error) {
+                console.error("SAINT BOT ROOM PWA ERROR:", error);
+            });
+    });
+}
+</script>
 </body>
 </html>
