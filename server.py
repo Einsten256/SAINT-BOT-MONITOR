@@ -558,12 +558,50 @@ def mt5_heartbeat():
             account_id
         )
 
-        if not registered or not registered.get(
+        # --------------------------------------------------------
+        # AUTO-REGISTER NEW MT5 BOT ACCOUNTS
+        # --------------------------------------------------------
+        # Render's free filesystem can reset bot_accounts.json.
+        # A valid MT5 controller must therefore be able to restore
+        # its account registration automatically.
+        #
+        # IMPORTANT:
+        # - Unknown account -> register automatically.
+        # - Existing inactive account -> remain blocked.
+        # - Existing active account -> continue normally.
+        # --------------------------------------------------------
+
+        if registered is None:
+            registered = {
+                "accountId": account_id,
+                "active": True,
+                "label": "",
+                "registeredAt": now_iso(),
+                "updatedAt": now_iso(),
+                "autoRegistered": True
+            }
+
+            authorized_accounts[account_id] = registered
+
+            try:
+                save_registry()
+            except Exception as exc:
+                print(
+                    "[REGISTRY] Auto-save failed:",
+                    exc
+                )
+
+            print(
+                "[MT5] AUTO-REGISTERED ACCOUNT:",
+                account_id
+            )
+
+        elif not registered.get(
             "active",
             False
         ):
             print(
-                "[MT5] BLOCKED inactive/unregistered account:",
+                "[MT5] BLOCKED DEACTIVATED ACCOUNT:",
                 account_id
             )
 
